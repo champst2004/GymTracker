@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Member - GymTracker</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">🏋️ FitTrack</div>
+            <a href="dashboard.html">🏠 Dashboard</a>
+            <a href="addMember.html" class="active">👤 Add Member</a>
+            <a href="viewMembers.html">📋 View Members</a>
+            <a href="addTrainer.html">🏃 Add Trainer</a>
+            <a href="viewTrainers.html">📋 View Trainers</a>
+            <a href="addSubscription.html">💳 Add Subscription</a>
+            <a href="viewSubscriptions.html">📊 View Subscriptions</a>
+            <a href="markAttendance.html">✅ Mark Attendance</a>
+            <a href="viewAttendance.html">📅 View Attendance</a>
+            <br>
+            <a href="/GymTracker/logout" style="color:#8892a4;">🚪 Logout</a>
+        </div>
+
+        <div class="main-content">
+            <div class="topbar">
+                <h1>Add New Member</h1>
+            </div>
+            
+            <div id="alertBox"></div>
+
+            <div class="form-container">
+                <form id="memberForm">
+                    <div class="form-group">
+                        <label>Full Name*</label>
+                        <input type="text" id="name">
+                        <span class="error-text" id="nameErr"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone* (10 digits)</label>
+                        <input type="text" id="phone" maxlength="10">
+                        <span class="error-text" id="phoneErr"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="email">
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (kg)*</label>
+                        <input type="number" id="weight" step="0.1">
+                        <span class="error-text" id="weightErr"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender*</label>
+                        <select id="gender">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span class="error-text" id="genderErr"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Join Date*</label>
+                        <input type="date" id="joinDate">
+                        <span class="error-text" id="joinErr"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Trainer (Optional)</label>
+                        <select id="trainerId">
+                            <!-- Populated via JS -->
+                        </select>
+                    </div>
+                    <button type="button" class="btn" onclick="submitMember()">Save Member</button>
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/validation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            populateDropdown("trainerId", "/GymTracker/trainer?action=list", "trainerId", "name", "No Trainer");
+        });
+
+        function submitMember() {
+            if (!validateMemberForm()) return;
+            
+            const params = new URLSearchParams({
+                name: document.getElementById("name").value,
+                phone: document.getElementById("phone").value,
+                email: document.getElementById("email").value,
+                weight: document.getElementById("weight").value,
+                gender: document.getElementById("gender").value,
+                joinDate: document.getElementById("joinDate").value,
+                trainerId: document.getElementById("trainerId").value
+            });
+
+            fetch('/GymTracker/member?action=add', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: params
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    showAlert("Member added successfully!", "success");
+                    document.getElementById("memberForm").reset();
+                } else {
+                    showAlert("Failed to add member: " + data.message, "error");
+                }
+            })
+            .catch(e => showAlert("Error: " + e, "error"));
+        }
+    </script>
+</body>
+</html>

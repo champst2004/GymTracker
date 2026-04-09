@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Trainers - GymTracker</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="layout">
+        <div class="sidebar">
+            <div class="logo">🏋️ FitTrack</div>
+            <a href="dashboard.html">🏠 Dashboard</a>
+            <a href="addMember.html">👤 Add Member</a>
+            <a href="viewMembers.html">📋 View Members</a>
+            <a href="addTrainer.html">🏃 Add Trainer</a>
+            <a href="viewTrainers.html" class="active">📋 View Trainers</a>
+            <a href="addSubscription.html">💳 Add Subscription</a>
+            <a href="viewSubscriptions.html">📊 View Subscriptions</a>
+            <a href="markAttendance.html">✅ Mark Attendance</a>
+            <a href="viewAttendance.html">📅 View Attendance</a>
+            <br>
+            <a href="/GymTracker/logout" style="color:#8892a4;">🚪 Logout</a>
+        </div>
+
+        <div class="main-content">
+            <div class="topbar">
+                <h1>View Trainers</h1>
+            </div>
+            
+            <div id="alertBox"></div>
+            
+            <div class="table-container">
+                <table id="trainersTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Specialization</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+                <p id="emptyMsg" style="display:none; text-align:center; padding:20px;">No trainers found.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/validation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', loadTrainers);
+
+        function loadTrainers() {
+            fetch('/GymTracker/trainer?action=list')
+            .then(r => r.json())
+            .then(data => {
+                const tbody = document.getElementById("tableBody");
+                tbody.innerHTML = "";
+                
+                if (data.length === 0) {
+                    document.getElementById("emptyMsg").style.display = "block";
+                    return;
+                }
+                document.getElementById("emptyMsg").style.display = "none";
+
+                data.forEach(t => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${t.trainerId}</td>
+                        <td>${t.name}</td>
+                        <td>${t.phone}</td>
+                        <td>${t.email || '-'}</td>
+                        <td>${t.specialization}</td>
+                        <td>
+                             <button class="btn btn-small" onclick="deleteT(${t.trainerId})">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+
+        function deleteT(id) {
+            if(confirm("Are you sure you want to delete this trainer?")) {
+                fetch('/GymTracker/trainer?action=delete', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: `id=${id}`
+                }).then(r=>r.json()).then(d => {
+                    if(d.success) { showAlert("Deleted successfully", "success"); loadTrainers(); }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Attendance - GymTracker</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="layout">
+        <div class="sidebar">
+            <div class="logo">🏋️ FitTrack</div>
+            <a href="dashboard.html">🏠 Dashboard</a>
+            <a href="addMember.html">👤 Add Member</a>
+            <a href="viewMembers.html">📋 View Members</a>
+            <a href="addTrainer.html">🏃 Add Trainer</a>
+            <a href="viewTrainers.html">📋 View Trainers</a>
+            <a href="addSubscription.html">💳 Add Subscription</a>
+            <a href="viewSubscriptions.html">📊 View Subscriptions</a>
+            <a href="markAttendance.html">✅ Mark Attendance</a>
+            <a href="viewAttendance.html" class="active">📅 View Attendance</a>
+            <br>
+            <a href="/GymTracker/logout" style="color:#8892a4;">🚪 Logout</a>
+        </div>
+
+        <div class="main-content">
+            <div class="topbar">
+                <h1>View Attendance Log</h1>
+            </div>
+            
+            <div id="alertBox"></div>
+
+            <div class="form-group" style="max-width: 400px;">
+                <label>Filter by Member</label>
+                <select id="filterMember" onchange="loadLog()">
+                    <!-- Populated via JS -->
+                </select>
+            </div>
+            
+            <div class="table-container">
+                <table id="logTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Member Name</th>
+                            <th>Check-in Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/validation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            populateDropdown("filterMember", "/GymTracker/member?action=list", "memberId", "name", "All Members");
+            setTimeout(loadLog, 500); // give dropdown time to populate
+        });
+
+        function loadLog() {
+            const mId = document.getElementById("filterMember").value;
+            let url = '/GymTracker/attendance?action=all';
+            if (mId !== "") {
+                url = '/GymTracker/attendance?action=byMember&id=' + mId;
+            }
+            
+            fetch(url)
+            .then(r => r.json())
+            .then(data => {
+                const tbody = document.getElementById("tableBody");
+                tbody.innerHTML = "";
+                
+                data.forEach((a, idx) => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${idx + 1}</td>
+                        <td>${a.memberName}</td>
+                        <td>${formatDateTime(a.checkInTime)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

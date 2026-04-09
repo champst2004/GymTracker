@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Subscription - GymTracker</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">🏋️ FitTrack</div>
+            <a href="dashboard.html">🏠 Dashboard</a>
+            <a href="addMember.html">👤 Add Member</a>
+            <a href="viewMembers.html">📋 View Members</a>
+            <a href="addTrainer.html">🏃 Add Trainer</a>
+            <a href="viewTrainers.html">📋 View Trainers</a>
+            <a href="addSubscription.html" class="active">💳 Add Subscription</a>
+            <a href="viewSubscriptions.html">📊 View Subscriptions</a>
+            <a href="markAttendance.html">✅ Mark Attendance</a>
+            <a href="viewAttendance.html">📅 View Attendance</a>
+            <br>
+            <a href="/GymTracker/logout" style="color:#8892a4;">🚪 Logout</a>
+        </div>
+
+        <div class="main-content">
+            <div class="topbar">
+                <h1>Add Subscription</h1>
+            </div>
+            
+            <div id="alertBox"></div>
+
+            <div class="form-container">
+                <form id="subForm">
+                    <div class="form-group">
+                        <label>Member*</label>
+                        <select id="memberId" required>
+                            <!-- Populated via JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Type*</label>
+                        <select id="type" required onchange="updateCalc()">
+                            <option value="">Select Type</option>
+                            <option value="Monthly">Monthly</option>
+                            <option value="Quarterly">Quarterly</option>
+                            <option value="Half-Yearly">Half-Yearly</option>
+                            <option value="Yearly">Yearly</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date*</label>
+                        <input type="date" id="startDate" required onchange="updateCalc()">
+                    </div>
+                    <div class="form-group">
+                        <label>End Date (Auto-calculated)*</label>
+                        <input type="date" id="endDate" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount (₹) (Read-only)*</label>
+                        <input type="text" id="amount" readonly>
+                    </div>
+                    
+                    <button type="button" class="btn" onclick="submitSub()">Save Subscription</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/validation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            populateDropdown("memberId", "/GymTracker/member?action=list", "memberId", "name", "Select Member");
+            document.getElementById("startDate").valueAsDate = new Date();
+        });
+
+        const prices = {
+            "Monthly": 999,
+            "Quarterly": 2699,
+            "Half-Yearly": 4999,
+            "Yearly": 8999
+        };
+
+        function updateCalc() {
+            const type = document.getElementById("type").value;
+            const startVal = document.getElementById("startDate").value;
+            
+            if (type && startVal) {
+                document.getElementById("amount").value = prices[type];
+                
+                const sDate = new Date(startVal);
+                if (type === "Monthly") sDate.setMonth(sDate.getMonth() + 1);
+                else if (type === "Quarterly") sDate.setMonth(sDate.getMonth() + 3);
+                else if (type === "Half-Yearly") sDate.setMonth(sDate.getMonth() + 6);
+                else if (type === "Yearly") sDate.setFullYear(sDate.getFullYear() + 1);
+                
+                document.getElementById("endDate").value = sDate.toISOString().split('T')[0];
+            } else {
+                document.getElementById("amount").value = "";
+                document.getElementById("endDate").value = "";
+            }
+        }
+
+        function submitSub() {
+            const mId = document.getElementById("memberId").value;
+            const type = document.getElementById("type").value;
+            const sDate = document.getElementById("startDate").value;
+            const eDate = document.getElementById("endDate").value;
+            
+            if(mId==="" || type==="" || sDate==="" || eDate==="") {
+                showAlert("Please fill all required fields", "error");
+                return;
+            }
+            
+            const params = new URLSearchParams({
+                action: 'add',
+                memberId: mId,
+                type: type,
+                startDate: sDate,
+                endDate: eDate
+            });
+
+            fetch('/GymTracker/subscription', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: params
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    showAlert("Subscription added successfully!", "success");
+                    document.getElementById("subForm").reset();
+                    document.getElementById("startDate").valueAsDate = new Date();
+                } else {
+                    showAlert("Failed to add subscription: " + data.message, "error");
+                }
+            })
+            .catch(e => showAlert("Error: " + e, "error"));
+        }
+    </script>
+</body>
+</html>

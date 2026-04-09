@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GymTracker - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">🏋️ FitTrack</div>
+            <a href="dashboard.html" class="active">🏠 Dashboard</a>
+            <a href="addMember.html">👤 Add Member</a>
+            <a href="viewMembers.html">📋 View Members</a>
+            <a href="addTrainer.html">🏃 Add Trainer</a>
+            <a href="viewTrainers.html">📋 View Trainers</a>
+            <a href="addSubscription.html">💳 Add Subscription</a>
+            <a href="viewSubscriptions.html">📊 View Subscriptions</a>
+            <a href="markAttendance.html">✅ Mark Attendance</a>
+            <a href="viewAttendance.html">📅 View Attendance</a>
+            <br>
+            <a href="/GymTracker/logout" style="color:#8892a4;">🚪 Logout</a>
+        </div>
+
+        <div class="main-content">
+            <div class="topbar">
+                <h1>Dashboard</h1>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3>Total Members</h3>
+                    <div class="value" id="totMembers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Trainers</h3>
+                    <div class="value" id="totTrainers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Subscriptions</h3>
+                    <div class="value" id="activeSubs">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Check-ins</h3>
+                    <div class="value" id="totCheckins">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/validation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/GymTracker/member?action=list').then(r=>r.json()).then(data => {
+                document.getElementById("totMembers").innerText = data.length || 0;
+            }).catch(e => console.error(e));
+
+            fetch('/GymTracker/trainer?action=list').then(r=>r.json()).then(data => {
+                document.getElementById("totTrainers").innerText = data.length || 0;
+            }).catch(e => console.error(e));
+
+            fetch('/GymTracker/subscription?action=all').then(r=>r.json()).then(data => {
+                document.getElementById("activeSubs").innerText = data.length || 0;
+            }).catch(e => console.error(e));
+
+            fetch('/GymTracker/attendance?action=all').then(r=>r.json()).then(data => {
+                document.getElementById("totCheckins").innerText = data.length || 0;
+            }).catch(e => console.error(e));
+        });
+    </script>
+</body>
+</html>

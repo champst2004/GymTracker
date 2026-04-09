@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Subscriptions - GymTracker</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="layout">
+        <div class="sidebar">
+            <div class="logo">🏋️ FitTrack</div>
+            <a href="dashboard.html">🏠 Dashboard</a>
+            <a href="addMember.html">👤 Add Member</a>
+            <a href="viewMembers.html">📋 View Members</a>
+            <a href="addTrainer.html">🏃 Add Trainer</a>
+            <a href="viewTrainers.html">📋 View Trainers</a>
+            <a href="addSubscription.html">💳 Add Subscription</a>
+            <a href="viewSubscriptions.html" class="active">📊 View Subscriptions</a>
+            <a href="markAttendance.html">✅ Mark Attendance</a>
+            <a href="viewAttendance.html">📅 View Attendance</a>
+            <br>
+            <a href="/GymTracker/logout" style="color:#8892a4;">🚪 Logout</a>
+        </div>
+
+        <div class="main-content">
+            <div class="topbar">
+                <h1>View Subscriptions</h1>
+            </div>
+            
+            <div id="alertBox"></div>
+            
+            <div class="table-container">
+                <table id="subsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Member</th>
+                            <th>Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Amount (₹)</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/validation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', loadSubs);
+
+        function loadSubs() {
+            fetch('/GymTracker/subscription?action=all')
+            .then(r => r.json())
+            .then(data => {
+                const tbody = document.getElementById("tableBody");
+                tbody.innerHTML = "";
+                
+                data.forEach(s => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${s.subscriptionId}</td>
+                        <td>${s.memberName}</td>
+                        <td>${s.subscriptionType}</td>
+                        <td>${s.startDate}</td>
+                        <td>${s.endDate}</td>
+                        <td>${s.amount}</td>
+                        <td>
+                            <select id="status_${s.subscriptionId}" onchange="updateStat(${s.subscriptionId})">
+                                <option value="Active" ${s.status==='Active'?'selected':''}>Active</option>
+                                <option value="Expired" ${s.status==='Expired'?'selected':''}>Expired</option>
+                                <option value="Cancelled" ${s.status==='Cancelled'?'selected':''}>Cancelled</option>
+                            </select>
+                        </td>
+                        <td>
+                             <button class="btn btn-small" onclick="updateStat(${s.subscriptionId})">Update</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+
+        function updateStat(id) {
+            const st = document.getElementById('status_'+id).value;
+            fetch('/GymTracker/subscription', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `action=updateStatus&subscriptionId=${id}&status=${st}`
+            }).then(r=>r.json()).then(d => {
+                if(d.success) { showAlert("Status updated to " + st, "success"); }
+                else { showAlert("Failed to update status", "error"); }
+            });
+        }
+    </script>
+</body>
+</html>
