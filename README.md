@@ -1,8 +1,8 @@
-# GymTracker (GymTracker) 💪
+# GymTracker💪
 
 > A comprehensive, Java-based web application tailored for gym and fitness center management. Clean, efficient, and easy to deploy!
 
-**GymTracker** (marketed as GymTracker) allows fitness center administrators to securely log in, manage trainers, onboard members, track their subscriptions, and securely log their daily attendance. It leverages a rigorous Java Servlet backend linked with a robust MySQL database to give gym owners total control over their business operations.
+**GymTracker** allows fitness center administrators to securely log in, manage trainers, onboard members, track their subscriptions, and securely log their daily attendance. It leverages a rigorous Java Servlet backend linked with a robust MySQL database to give gym owners total control over their business operations.
 
 ---
 
