@@ -69,3 +69,6 @@ If you've run the provided sample SQL, you can test the application using the fo
 
 ---
 
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/champst2004/GymTracker/blob/master/LICENSE) file for details.
