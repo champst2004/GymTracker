@@ -89,7 +89,9 @@ a {
     text-align: center;
     background: var(--accent-gradient);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
+    color: transparent;
     margin-bottom: 40px;
     letter-spacing: 1px;
 }
@@ -165,7 +167,9 @@ a {
     font-weight: 700;
     background: var(--accent-gradient);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
+    color: transparent;
 }
 
 /* ===== FORMS ===== */
@@ -399,7 +403,9 @@ table tr:hover {
 .login-card h1 {
     background: var(--accent-gradient);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
+    color: transparent;
     margin-bottom: 35px;
     font-size: 32px;
     font-weight: 700;
