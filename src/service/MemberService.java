@@ -5,10 +5,6 @@ import model.Member;
 
 import java.util.List;
 
-/**
- * @author GymTracker
- * @version 1.0
- */
 public class MemberService {
     private MemberDAO memberDAO;
 

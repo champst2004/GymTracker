@@ -5,10 +5,6 @@ import model.*;
 
 import java.util.List;
 
-/**
- * @author GymTracker
- * @version 1.0
- */
 public class SubscriptionService {
     private SubscriptionDAO subscriptionDAO;
 
@@ -16,15 +12,6 @@ public class SubscriptionService {
         this.subscriptionDAO = new SubscriptionDAO();
     }
 
-    /**
-     * Adds a subscription.
-     * Uses if-else or switch to instantiate the correct subclass based on type.
-     * @param memberId member
-     * @param type type
-     * @param startDate start
-     * @param endDate end
-     * @return true if success
-     */
     public boolean addSubscription(int memberId, String type, String startDate, String endDate) {
         Subscription s;
         switch (type) {

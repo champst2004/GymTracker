@@ -5,10 +5,6 @@ import model.Attendance;
 
 import java.util.List;
 
-/**
- * @author GymTracker
- * @version 1.0
- */
 public class AttendanceServiceImpl implements IAttendanceService {
 
     private AttendanceDAO attendanceDAO;

@@ -10,10 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author GymTracker
- * @version 1.0
- */
 public class TrainerDAO {
 
     /**

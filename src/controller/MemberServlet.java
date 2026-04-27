@@ -11,10 +11,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * @author GymTracker
- * @version 1.0
- */
 public class MemberServlet extends HttpServlet {
 
     private MemberService memberService = new MemberService();
