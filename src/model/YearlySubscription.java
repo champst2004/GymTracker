@@ -2,7 +2,6 @@ package model;
 
 public class YearlySubscription extends Subscription {
 
-    /** Default constructor */
     public YearlySubscription() {
         super();
         this.setSubscriptionType("Yearly");

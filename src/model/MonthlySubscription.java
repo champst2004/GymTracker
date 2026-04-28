@@ -2,7 +2,6 @@ package model;
 
 public class MonthlySubscription extends Subscription {
 
-    /** Default constructor */
     public MonthlySubscription() {
         super();
         this.setSubscriptionType("Monthly");

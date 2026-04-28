@@ -12,11 +12,6 @@ import java.util.List;
 
 public class AttendanceDAO {
 
-    /**
-     * Marks attendance.
-     * @param a Attendance object
-     * @return true if successful
-     */
     public boolean markAttendance(Attendance a) {
         String sql = "INSERT INTO attendance (member_id) VALUES (?)";
         try (Connection conn = DBConnection.getConnection();
@@ -30,11 +25,6 @@ public class AttendanceDAO {
         return false;
     }
 
-    /**
-     * Gets attendance by member with member name.
-     * @param memberId member ID
-     * @return list of Attendance
-     */
     public List<Attendance> getAttendanceByMember(int memberId) {
         List<Attendance> attendances = new ArrayList<>();
         String sql = "SELECT a.*, m.name AS member_name FROM attendance a JOIN members m ON a.member_id = m.member_id WHERE a.member_id = ? ORDER BY a.check_in_time DESC";
@@ -58,10 +48,6 @@ public class AttendanceDAO {
         return attendances;
     }
 
-    /**
-     * Gets all attendances joined with member name.
-     * @return list of Attendance
-     */
     public List<Attendance> getAllAttendance() {
         List<Attendance> attendances = new ArrayList<>();
         String sql = "SELECT a.*, m.name AS member_name FROM attendance a JOIN members m ON a.member_id = m.member_id ORDER BY a.check_in_time DESC";

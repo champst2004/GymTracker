@@ -12,11 +12,6 @@ import java.util.List;
 
 public class TrainerDAO {
 
-    /**
-     * Adds a trainer.
-     * @param t The trainer
-     * @return true if successful
-     */
     public boolean addTrainer(Trainer t) {
         String sql = "INSERT INTO trainers (name, phone, email, specialization) VALUES (?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -34,10 +29,6 @@ public class TrainerDAO {
         return false;
     }
 
-    /**
-     * Gets all trainers.
-     * @return List of Trainers
-     */
     public List<Trainer> getAllTrainers() {
         List<Trainer> trainers = new ArrayList<>();
         String sql = "SELECT * FROM trainers";
@@ -60,11 +51,6 @@ public class TrainerDAO {
         return trainers;
     }
 
-    /**
-     * Gets trainer by id.
-     * @param id Trainer ID
-     * @return Trainer
-     */
     public Trainer getTrainerById(int id) {
         String sql = "SELECT * FROM trainers WHERE trainer_id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -88,11 +74,6 @@ public class TrainerDAO {
         return null;
     }
 
-    /**
-     * Deletes a trainer.
-     * @param id Trainer ID
-     * @return true if successful
-     */
     public boolean deleteTrainer(int id) {
         String sql = "DELETE FROM trainers WHERE trainer_id = ?";
         try (Connection conn = DBConnection.getConnection();

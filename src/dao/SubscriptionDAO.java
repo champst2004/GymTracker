@@ -12,11 +12,6 @@ import java.util.List;
 
 public class SubscriptionDAO {
 
-    /**
-     * Adds a subscription.
-     * @param s The Subscription
-     * @return true if successful
-     */
     public boolean addSubscription(Subscription s) {
         String sql = "INSERT INTO subscriptions (member_id, subscription_type, start_date, end_date, amount, status) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -36,9 +31,6 @@ public class SubscriptionDAO {
         return false;
     }
 
-    /**
-     * Helper mapping DB row to subclass
-     */
     private Subscription mapRowToSubscription(ResultSet rs) throws SQLException {
         int id = rs.getInt("subscription_id");
         int memberId = rs.getInt("member_id");
@@ -67,11 +59,6 @@ public class SubscriptionDAO {
         return sub;
     }
 
-    /**
-     * Gets subscriptions for member.
-     * @param memberId member ID
-     * @return List of Subscriptions
-     */
     public List<Subscription> getSubscriptionsByMember(int memberId) {
         List<Subscription> subs = new ArrayList<>();
         String sql = "SELECT * FROM subscriptions WHERE member_id = ?";
@@ -90,9 +77,6 @@ public class SubscriptionDAO {
         return subs;
     }
 
-    /**
-     * Gets all subscriptions joined with member name.
-     */
     public List<Subscription> getAllSubscriptions() {
         List<Subscription> subs = new ArrayList<>();
         String sql = "SELECT s.*, m.name AS member_name FROM subscriptions s JOIN members m ON s.member_id = m.member_id";
@@ -111,12 +95,6 @@ public class SubscriptionDAO {
         return subs;
     }
 
-    /**
-     * Updates subscription status.
-     * @param subscriptionId ID
-     * @param status status
-     * @return true if successful
-     */
     public boolean updateStatus(int subscriptionId, String status) {
         String sql = "UPDATE subscriptions SET status = ? WHERE subscription_id = ?";
         try (Connection conn = DBConnection.getConnection();

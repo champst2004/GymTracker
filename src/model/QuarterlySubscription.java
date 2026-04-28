@@ -2,7 +2,6 @@ package model;
 
 public class QuarterlySubscription extends Subscription {
 
-    /** Default constructor */
     public QuarterlySubscription() {
         super();
         this.setSubscriptionType("Quarterly");

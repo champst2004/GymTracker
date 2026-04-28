@@ -3,7 +3,7 @@ package model;
 public abstract class Subscription {
     private int subscriptionId;
     private int memberId;
-    private String memberName; // Added for display joins
+    private String memberName;
     private String subscriptionType;
     private String startDate;
     private String endDate;

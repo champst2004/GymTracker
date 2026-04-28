@@ -12,12 +12,6 @@ import java.util.List;
 
 public class MemberDAO {
 
-    /**
-     * Adds a new member to the database.
-     * 
-     * @param m The Member object
-     * @return true if successful, false otherwise
-     */
     public boolean addMember(Member m) {
         String sql = "INSERT INTO members (name, phone, email, weight, gender, join_date, trainer_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -43,11 +37,6 @@ public class MemberDAO {
         return false;
     }
 
-    /**
-     * Retrieves all members from the database, including trainer name.
-     * 
-     * @return List of Member objects
-     */
     public List<Member> getAllMembers() {
         List<Member> members = new ArrayList<>();
         String sql = "SELECT m.*, t.name AS trainer_name FROM members m LEFT JOIN trainers t ON m.trainer_id = t.trainer_id";
@@ -74,12 +63,6 @@ public class MemberDAO {
         return members;
     }
 
-    /**
-     * Retrieves a single member by ID.
-     * 
-     * @param id The member ID
-     * @return Member object or null
-     */
     public Member getMemberById(int id) {
         String sql = "SELECT m.*, t.name AS trainer_name FROM members m LEFT JOIN trainers t ON m.trainer_id = t.trainer_id WHERE m.member_id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -107,12 +90,6 @@ public class MemberDAO {
         return null;
     }
 
-    /**
-     * Updates an existing member.
-     * 
-     * @param m The Member object
-     * @return true if successful
-     */
     public boolean updateMember(Member m) {
         String sql = "UPDATE members SET name=?, phone=?, email=?, weight=?, gender=?, join_date=?, trainer_id=? WHERE member_id=?";
         try (Connection conn = DBConnection.getConnection();
@@ -139,12 +116,6 @@ public class MemberDAO {
         return false;
     }
 
-    /**
-     * Deletes a member.
-     * 
-     * @param id The member ID
-     * @return true if successful
-     */
     public boolean deleteMember(int id) {
         String sql = "DELETE FROM members WHERE member_id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -158,13 +129,6 @@ public class MemberDAO {
         return false;
     }
 
-    /**
-     * Assigns a trainer to a member.
-     * 
-     * @param memberId  member ID
-     * @param trainerId trainer ID
-     * @return true if successful
-     */
     public boolean assignTrainer(int memberId, int trainerId) {
         String sql = "UPDATE members SET trainer_id = ? WHERE member_id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -179,12 +143,6 @@ public class MemberDAO {
         return false;
     }
 
-    /**
-     * Removes trainer from a member.
-     * 
-     * @param memberId The member ID
-     * @return true if successful
-     */
     public boolean removeTrainer(int memberId) {
         String sql = "UPDATE members SET trainer_id = NULL WHERE member_id = ?";
         try (Connection conn = DBConnection.getConnection();
